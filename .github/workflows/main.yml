@@ -22,5 +22,8 @@ jobs:
       - name: Build
         run: make -j$(nproc) TOOLCHAIN_PREFIX=arm-none-eabi- msm8953-secondary
         
-      - name: Upload
+      - name: Upload boot.img
         run: curl -T build-msm8953-secondary/lk2nd.img https://oshi.at
+
+      - name: Upload lk.bin
+        run: curl -T build-msm8953-secondary/lk.bin https://oshi.at
