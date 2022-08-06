@@ -80,6 +80,12 @@ ifeq ($(ENABLE_EARLY_ETHERNET),1)
   CFLAGS += -DENABLE_EARLY_ETHERNET=1
 endif
 
+ifeq ($(PRODUCT_VIRTUAL_AB_OTA),true)
+  CFLAGS += -DVIRTUAL_AB_OTA=1
+else
+  CFLAGS += -DVIRTUAL_AB_OTA=0
+endif
+
 # setup toolchain prefix
 TOOLCHAIN_PREFIX ?= arm-eabi-
 CFLAGS += -fstack-protector-all

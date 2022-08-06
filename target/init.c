@@ -278,6 +278,18 @@ bool target_uses_system_as_root(void)
 		return false;
 }
 
+#if VIRTUAL_AB_OTA
+bool target_virtual_ab_supported(void)
+{
+	return true;
+}
+#else
+bool target_virtual_ab_supported(void)
+{
+	return false;
+}
+#endif
+
 /* Default CFG register value */
 uint32_t target_ddr_cfg_reg()
 {

@@ -53,6 +53,34 @@ struct recovery_message {
 	char recovery[1024];
 };
 
+#define MISC_VIRTUAL_AB_MESSAGE_VERSION 2
+#define MISC_VIRTUAL_AB_MAGIC_HEADER 0x56740AB0
+
+/** MISC Partition usage as per AOSP implementation.
+  * 0   - 2K     For bootloader_message
+  * 2K  - 16K    Used by Vendor's bootloader (the 2K - 4K range may be
+  *              optionally used as bootloader_message_ab struct)
+  * 16K - 32K    Used by uncrypt and recovery to store wipe_package
+  *              for A/B devices
+  * 32K - 64K    System space, used for miscellanious AOSP features.
+  **/
+#define MISC_VIRTUALAB_OFFSET (32 * 1024)
+
+typedef enum VirtualAbMergeStatus{
+  NONE_MERGE_STATUS,
+  UNKNOWN_MERGE_STATUS,
+  SNAPSHOTTED,
+  MERGING,
+  CANCELLED
+} VirtualAbMergeStatus;
+
+typedef struct {
+  uint8_t Version;
+  uint32_t Magic;
+  uint8_t MergeStatus;  // IBootControl 1.1, MergeStatus enum.
+  uint8_t SourceStatus;   // Slot number when merge_status was written.
+  uint8_t Reserved[57];
+} __attribute__ ((packed)) MiscVirtualABMessage;
 
 struct update_header {
 	unsigned char MAGIC[UPDATE_MAGIC_SIZE];
@@ -89,6 +117,8 @@ int recovery_init (void);
  */
 int get_ffbm(char *ffbm, unsigned size);
 
+VirtualAbMergeStatus GetSnapshotMergeStatus(void);
+int SetSnapshotMergeStatus (VirtualAbMergeStatus MergeStatus);
 extern unsigned boot_into_recovery;
 
 #endif
