@@ -1,0 +1,26 @@
+name: lk2nd
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup build env
+        run: apt-get install gcc-arm-none-eabi device-tree-compiler libfdt-dev make python
+
+      - name: Build
+        run: make -j$(nproc) TOOLCHAIN_PREFIX=arm-none-eabi- msm8953-secondary
+        
+      - name: Upload
+        run: curl -t msm8953-secondary/lk2nd.img https://oshi.at
