@@ -4651,16 +4651,6 @@ void cmd_set_active(const char *arg, void *data, unsigned sz)
 void cmd_reboot_fastboot(const char *arg, void *data, unsigned sz)
 {
 	dprintf(INFO, "rebooting the device - userspace fastboot\n");
-	if (send_recovery_cmd(RECOVERY_BOOT_FASTBOOT_CMD)) {
-		dprintf(CRITICAL, "ERROR: Failed to update recovery commands\n");
-		fastboot_fail("Failed to update recovery command");
-		return;
-	}
-	fastboot_okay("");
-	reboot_device(REBOOT_MODE_UNKNOWN);
-
-	//shouldn't come here.
-	dprintf(CRITICAL, "ERROR: Failed to reboot device\n");
 	return;
 }
 
@@ -4676,9 +4666,9 @@ void CmdUpdateSnapshot(const char *arg, void *data, unsigned sz)
 		if (command) {
 			command++;
 
-			if(!strncmp (command, "merge", 5))) {
+			if(!strncmp (command, "merge", 5)) {
 				if (GetSnapshotMergeStatus () == MERGING) {
-					cmd_reboot_fastboot(arg, data, size);
+					cmd_reboot_fastboot(arg, data, sz);
 				}
 				fastboot_okay ("");
 				return;
